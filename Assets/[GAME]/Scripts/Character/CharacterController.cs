@@ -14,7 +14,7 @@ public class CharacterController : MonoBehaviour, ICharacterController
         if (Managers.Instance == null)
             return;
         EventManager.OnSwipeDetected.AddListener(Surf);
-        EventManager.OnLevelStart.AddListener(() => IsRunning = true);
+        EventManager.OnGameStart.AddListener(() => IsRunning = true);
         EventManager.OnLevelFinish.AddListener(() => IsRunning = false);
     }
 
@@ -23,7 +23,7 @@ public class CharacterController : MonoBehaviour, ICharacterController
         if (Managers.Instance == null)
             return;
         EventManager.OnSwipeDetected.RemoveListener(Surf);
-        EventManager.OnLevelStart.RemoveListener(() => IsRunning = true);
+        EventManager.OnGameStart.RemoveListener(() => IsRunning = true);
         EventManager.OnLevelFinish.RemoveListener(() => IsRunning = false);
     }
 

@@ -33,7 +33,7 @@ public class Character : MonoBehaviour
         CharacterManager.Instance.RemoveCharacter(this);
         //EventManager.OnLevelFinish.RemoveListener(() => StopAllCoroutines());
     }
-    /*
+    
     private void OnTriggerEnter(Collider other)
     {
         ICollectable collectable = other.GetComponent<ICollectable>();
@@ -42,7 +42,7 @@ public class Character : MonoBehaviour
             collectable.Collect();
         }
     }
-    
+    /*
     private void OnTriggerExit(Collider other)
     {
         if (other.GetComponent<DoorBase>() != null)
