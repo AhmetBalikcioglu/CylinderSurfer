@@ -25,12 +25,12 @@ public class HumanoidCharacter : MonoBehaviour
 
     private void PositionUpdateCollect()
     {
-        transform.localPosition = Vector3.up * CylinderManager.Instance.ActiveCylinders.Count * CylinderManager.Instance.cylinderHeight;
+        transform.localPosition = Vector3.up * ((CylinderManager.Instance.ActiveCylinders.Count - 1) * CylinderManager.Instance.cylinderHeight + 0.375f);
         transform.DOLocalMoveY(transform.localPosition.y + 0.3f, 0.1f);
-        transform.DOLocalMoveY(CylinderManager.Instance.ActiveCylinders.Count * CylinderManager.Instance.cylinderHeight, 0.1f).SetDelay(0.1f);
+        transform.DOLocalMoveY((CylinderManager.Instance.ActiveCylinders.Count - 1) * CylinderManager.Instance.cylinderHeight + 0.375f, 0.1f).SetDelay(0.1f);
     }
     private void PositionUpdateSlam()
     {
-        transform.DOLocalMoveY(CylinderManager.Instance.ActiveCylinders.Count * CylinderManager.Instance.cylinderHeight, 0.3f).SetDelay(0.30f + 0.05f * CylinderManager.Instance.ActiveCylinders.Count);
+        transform.DOLocalMoveY((CylinderManager.Instance.ActiveCylinders.Count - 1) * CylinderManager.Instance.cylinderHeight + 0.375f, 0.3f).SetDelay(0.30f + 0.05f * CylinderManager.Instance.ActiveCylinders.Count);
     }
 }
