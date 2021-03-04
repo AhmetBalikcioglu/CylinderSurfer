@@ -24,6 +24,7 @@ public static class EventManager
 
     public static ScoreEvent OnScoreMultiply = new ScoreEvent();
     public static ScoreEvent OnScoreUpdate = new ScoreEvent();
+    public static UnityEvent OnScoreUIUpdate = new UnityEvent();
 }
 public class InputEvent : UnityEvent<float> { }
 public class ScoreEvent : UnityEvent<float> { }
