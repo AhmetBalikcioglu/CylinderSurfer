@@ -13525,6 +13525,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cylinder
       objectReference: {fileID: 0}
+    - target: {fileID: 3846770134634246540, guid: d68f4f8b0357cfd4697dd6810fdbff35,
+        type: 3}
+      propertyPath: _plusOneText
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d68f4f8b0357cfd4697dd6810fdbff35, type: 3}
 --- !u!1001 &6119922358561463695

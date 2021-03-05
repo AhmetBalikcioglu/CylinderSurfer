@@ -36,9 +36,12 @@ public class Cylinder : MonoBehaviour, ICollectable, ISlammable
         transform.parent = CharacterManager.Instance.Player.transform;
         CylinderManager.Instance.ActiveCylinders.Add(this);
         EventManager.OnCylinderCollected.Invoke();
-        GameObject tempTextGO = Instantiate(_plusOneText, transform);
-        tempTextGO.transform.position += Vector3.right;
-        Destroy(tempTextGO, 0.5f);
+        if(_plusOneText != null)
+        {
+            GameObject tempTextGO = Instantiate(_plusOneText, transform);
+            tempTextGO.transform.position += Vector3.right;
+            Destroy(tempTextGO, 0.5f);
+        }
     }
 
     private void PositionUpdateCollect()
