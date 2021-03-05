@@ -10,8 +10,8 @@ public class HumanoidCharacter : MonoBehaviour
         if (Managers.Instance == null)
             return;
 
-        EventManager.OnCylinderCollected.AddListener(PositionUpdateCollect);
-        EventManager.OnCylinderSlammed.AddListener(PositionUpdateSlam);
+        EventManager.OnCylinderCollected.AddListener(() => { StopAllCoroutines(); PositionUpdateCollect(); });
+        EventManager.OnCylinderSlammed.AddListener(() => StartCoroutine(PositionUpdateSlam()));
     }
 
     private void OnDisable()
@@ -19,18 +19,19 @@ public class HumanoidCharacter : MonoBehaviour
         if (Managers.Instance == null)
             return;
 
-        EventManager.OnCylinderCollected.RemoveListener(PositionUpdateCollect);
-        EventManager.OnCylinderSlammed.RemoveListener(PositionUpdateSlam);
+        EventManager.OnCylinderCollected.RemoveListener(() => { StopAllCoroutines(); PositionUpdateCollect(); });
+        EventManager.OnCylinderSlammed.RemoveListener(() => StartCoroutine(PositionUpdateSlam()));
     }
 
     private void PositionUpdateCollect()
     {
         transform.localPosition = Vector3.up * ((CylinderManager.Instance.ActiveCylinders.Count - 1) * CylinderManager.Instance.cylinderHeight + 0.375f);
-        transform.DOLocalMoveY(transform.localPosition.y + 0.3f, 0.1f);
+        transform.DOLocalMoveY(transform.localPosition.y + 0.1f, 0.1f);
         transform.DOLocalMoveY((CylinderManager.Instance.ActiveCylinders.Count - 1) * CylinderManager.Instance.cylinderHeight + 0.375f, 0.1f).SetDelay(0.1f);
     }
-    private void PositionUpdateSlam()
+    private IEnumerator PositionUpdateSlam()
     {
-        transform.DOLocalMoveY((CylinderManager.Instance.ActiveCylinders.Count - 1) * CylinderManager.Instance.cylinderHeight + 0.375f, 0.3f).SetDelay(0.30f + 0.05f * CylinderManager.Instance.ActiveCylinders.Count);
+        yield return new WaitForSeconds(CylinderManager.Instance.slamGravityTimer);
+        transform.DOLocalMoveY((CylinderManager.Instance.ActiveCylinders.Count - 1) * CylinderManager.Instance.cylinderHeight + 0.375f, 0.3f).SetDelay(0.05f * CylinderManager.Instance.ActiveCylinders.Count);
     }
 }

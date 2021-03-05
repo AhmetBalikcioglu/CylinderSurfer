@@ -5,10 +5,10 @@ using UnityEngine;
 public class CylinderManager : Singleton<CylinderManager>
 {
     private List<Cylinder> _activeCylinders;
-    public List<Cylinder> ActiveCylinders { get { return _activeCylinders; } set { _activeCylinders = value; } }
+    public List<Cylinder> ActiveCylinders { get { return _activeCylinders; } set { _activeCylinders = value;} }
 
     public float cylinderHeight;
-
+    public float slamGravityTimer;
     private void OnEnable()
     {
         if (Managers.Instance == null)

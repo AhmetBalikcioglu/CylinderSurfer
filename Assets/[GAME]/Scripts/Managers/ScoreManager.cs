@@ -5,6 +5,7 @@ using UnityEngine;
 public class ScoreManager : Singleton<ScoreManager>
 {
     public float score;
+    public float scoreMultiplier;
     private void OnEnable()
     {
         if (Managers.Instance == null)
@@ -23,7 +24,9 @@ public class ScoreManager : Singleton<ScoreManager>
 
     private void ScoreMultiply(float multiplier)
     {
+        scoreMultiplier = multiplier;
         score *= multiplier;
+        EventManager.OnLevelSuccess.Invoke();
     }
 
     public void ScoreUpdate(float amount)
