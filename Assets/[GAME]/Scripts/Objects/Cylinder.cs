@@ -11,13 +11,15 @@ public class Cylinder : MonoBehaviour, ICollectable, ISlammable
     private BoxCollider _boxCollider;
     public BoxCollider BoxCollider { get { return (_boxCollider == null) ? _boxCollider = GetComponent<BoxCollider>() : _boxCollider; } }
 
+    [SerializeField] private GameObject _plusOneText;
+
     private void OnEnable()
     {
         if (Managers.Instance == null)
             return;
 
-        EventManager.OnCylinderCollected.AddListener(PositionUpdateCollect);
-        EventManager.OnCylinderSlammed.AddListener(PositionUpdateSlam);
+        EventManager.OnCylinderCollected.AddListener(() => { StopAllCoroutines(); PositionUpdateCollect(); });
+        EventManager.OnCylinderSlammed.AddListener(() => StartCoroutine(PositionUpdateSlam()));
     }
 
     private void OnDisable()
@@ -25,8 +27,8 @@ public class Cylinder : MonoBehaviour, ICollectable, ISlammable
         if (Managers.Instance == null)
             return;
 
-        EventManager.OnCylinderCollected.RemoveListener(PositionUpdateCollect);
-        EventManager.OnCylinderSlammed.RemoveListener(PositionUpdateSlam);
+        EventManager.OnCylinderCollected.RemoveListener(() => { StopAllCoroutines(); PositionUpdateCollect(); });
+        EventManager.OnCylinderSlammed.RemoveListener(() => StartCoroutine(PositionUpdateSlam()));
     }
 
     public void Collect()
@@ -34,6 +36,12 @@ public class Cylinder : MonoBehaviour, ICollectable, ISlammable
         transform.parent = CharacterManager.Instance.Player.transform;
         CylinderManager.Instance.ActiveCylinders.Add(this);
         EventManager.OnCylinderCollected.Invoke();
+        if(_plusOneText != null)
+        {
+            GameObject tempTextGO = Instantiate(_plusOneText, transform);
+            tempTextGO.transform.position += Vector3.right;
+            Destroy(tempTextGO, 0.5f);
+        }
     }
 
     private void PositionUpdateCollect()
@@ -42,15 +50,18 @@ public class Cylinder : MonoBehaviour, ICollectable, ISlammable
             return;
         transform.localPosition = Vector3.up * CylinderManager.Instance.ActiveCylinders.IndexOf(this) * CylinderManager.Instance.cylinderHeight;
     }
-    private void PositionUpdateSlam()
+    private IEnumerator PositionUpdateSlam()
     {
         if (!CylinderManager.Instance.ActiveCylinders.Contains(this))
-            return;
-        transform.DOLocalMoveY(CylinderManager.Instance.ActiveCylinders.IndexOf(this) * CylinderManager.Instance.cylinderHeight, 0.3f).SetDelay(0.30f + 0.05f * CylinderManager.Instance.ActiveCylinders.IndexOf(this));
+            yield break;
+        yield return new WaitForSeconds(CylinderManager.Instance.slamGravityTimer);
+        transform.DOLocalMoveY(CylinderManager.Instance.ActiveCylinders.IndexOf(this) * CylinderManager.Instance.cylinderHeight, 0.3f).SetDelay(0.05f * CylinderManager.Instance.ActiveCylinders.IndexOf(this));
     }
 
     public void Slam()
     {
+        if (!CylinderManager.Instance.ActiveCylinders.Contains(this))
+            return;
         CylinderManager.Instance.ActiveCylinders.Remove(this);
         transform.parent = null;
         BoxCollider.isTrigger = false;
@@ -60,11 +71,14 @@ public class Cylinder : MonoBehaviour, ICollectable, ISlammable
         if (CylinderManager.Instance.ActiveCylinders.Count == 0)
         {
             GameManager.Instance.GameEnd();
+            EventManager.OnLevelFail.Invoke();
         }
     }
 
     public void Slam(float multiplier)
     {
+        if (!CylinderManager.Instance.ActiveCylinders.Contains(this))
+            return;
         CylinderManager.Instance.ActiveCylinders.Remove(this);
         transform.parent = null;
         BoxCollider.isTrigger = false;
@@ -74,9 +88,7 @@ public class Cylinder : MonoBehaviour, ICollectable, ISlammable
         if (CylinderManager.Instance.ActiveCylinders.Count == 0)
         {
             GameManager.Instance.GameEnd();
-            EventManager.OnScoreMultiply.Invoke(multiplier);
+            EventManager.OnScoreMultiply.Invoke(multiplier - 1);
         }
-
     }
-
 }

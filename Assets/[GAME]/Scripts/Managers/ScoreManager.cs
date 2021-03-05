@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class ScoreManager : Singleton<ScoreManager>
 {
-    [SerializeField] private float _score;
+    public float score;
+    public float scoreMultiplier;
     private void OnEnable()
     {
         if (Managers.Instance == null)
@@ -23,12 +24,15 @@ public class ScoreManager : Singleton<ScoreManager>
 
     private void ScoreMultiply(float multiplier)
     {
-        _score *= multiplier;
+        scoreMultiplier = multiplier;
+        score *= multiplier;
+        EventManager.OnLevelSuccess.Invoke();
     }
 
     public void ScoreUpdate(float amount)
     {
-        _score += amount;
+        score += amount;
+        EventManager.OnScoreUIUpdate.Invoke();
     }
 
 }
