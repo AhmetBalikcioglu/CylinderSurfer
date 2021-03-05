@@ -68,6 +68,7 @@ public class Cylinder : MonoBehaviour, ICollectable, ISlammable
         if (CylinderManager.Instance.ActiveCylinders.Count == 0)
         {
             GameManager.Instance.GameEnd();
+            EventManager.OnLevelFail.Invoke();
         }
     }
 
@@ -84,7 +85,7 @@ public class Cylinder : MonoBehaviour, ICollectable, ISlammable
         if (CylinderManager.Instance.ActiveCylinders.Count == 0)
         {
             GameManager.Instance.GameEnd();
-            EventManager.OnScoreMultiply.Invoke(multiplier);
+            EventManager.OnScoreMultiply.Invoke(multiplier - 1);
         }
     }
 }
